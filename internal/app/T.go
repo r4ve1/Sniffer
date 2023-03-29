@@ -2,17 +2,27 @@ package app
 
 import (
 	"context"
-	"fmt"
 
 	"github.com/wailsapp/wails/v2/pkg/logger"
 
+	"sniffer/internal/cache"
 	"sniffer/internal/capture"
+	"sniffer/internal/reader"
+	"sniffer/internal/view"
 )
 
 type T struct {
-	appCtx context.Context
-	log    logger.Logger
-	cp     *capture.T
+	appCtx  context.Context
+	log     logger.Logger
+	v       view.I
+	session session
+}
+
+type session struct {
+	filename string
+	capture  capture.I
+	reader   reader.I
+	cache    cache.I
 }
 
 func New(log logger.Logger) *T {
@@ -25,9 +35,5 @@ func New(log logger.Logger) *T {
 // so we can call the runtime methods
 func (it *T) Startup(ctx context.Context) {
 	it.appCtx = ctx
-}
-
-// Greet returns a greeting for the given DeviceInfo
-func (it *T) Greet(name string) string {
-	return fmt.Sprintf("Hello %s, It's show time!", name)
+	it.v = view.New(ctx, it.log)
 }

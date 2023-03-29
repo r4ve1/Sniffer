@@ -7,8 +7,8 @@
 [实验要求](./assets/exercise-1.pdf)
 ## Features
 - [x] Pause/Resume
-- [ ] BPF Filter
-- [ ] Render abstract of packets
-- [ ] Render detail of packets
+- [x] BPF Filter
+- [x] Render abstract of packets
+- [ ] Render details of packets
 - [ ] HTTP Assembly
 - [ ] Flow Tracking

@@ -1,27 +1,71 @@
 <template>
-  <n-list>
-    <n-list-item
-        class="break-all"
-        v-for="(pkt, i) in packets"
-        v-bind:key="i"
-    >
-      <div>{{ pkt }}</div>
-    </n-list-item>
-  </n-list>
+  <div class="flex border-dashed border-y-1 border-y-gray-300"
+       :style=" pktStyle(p)  " >
+    <div class="w-1/12">
+      {{ p.No }}
+    </div>
+    <div class="w-1/12">
+      {{ p.Timestamp / 10e9 }}
+    </div>
+    <div class="w-1/12">
+      {{ p.Length }}
+    </div>
+    <div class="w-1/4">
+      <n-ellipsis class="w-3/4">
+        {{ p.Source }}
+      </n-ellipsis>
+    </div>
+    <div class="w-1/4">
+      <n-ellipsis class="w-3/4">
+        {{ p.Destination }}
+      </n-ellipsis>
+    </div>
+    <div>
+      {{ p.Protocol }}
+    </div>
+
+
+  </div>
 </template>
 
 <script lang="ts" setup>
-import {defineProps, PropType} from "vue";
+import {defineProps} from "vue";
+import {Packet} from "../store";
 
-defineProps({
-  packets: {
-    type: Array as PropType<Array<string>>,
-    required: true,
-  },
-})
+const props = defineProps<{
+  packet: Packet;
+}>();
+const p = props.packet;
+
+
+function pktStyle(pkt: Packet) {
+  let s = {
+    backgroundColor: 'white',
+    borderWidth: '1px',
+  }
+  const proto2color = new Map<string, string>(
+      [
+        ['TCP', '#e7e6ff'],
+        ['UDP', '#daeeff'],
+        ['ICMP', '#e2d7ff'],
+        ['DNS', '#c4e4ff'],
+        ['ARP', '#faf0d7'],
+        ["DHCP", '#daeeff'],
+        ["IGMP", '#fff3d6'],
+      ]);
+  const pr = pkt.Protocol
+  proto2color.forEach((v, k) => {
+    if (pr.startsWith(k)) {
+      s.backgroundColor = v
+    }
+  })
+  return s
+}
 
 </script>
 
 <style scoped>
-
+div {
+  text-align: center;
+}
 </style>

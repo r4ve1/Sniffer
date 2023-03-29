@@ -4,7 +4,6 @@ go 1.19
 
 require (
 	github.com/google/gopacket v1.1.19
-	github.com/labstack/gommon v0.3.1
 	github.com/stretchr/testify v1.8.0
 	github.com/wailsapp/wails/v2 v2.4.1
 	golang.org/x/exp v0.0.0-20220303212507-bbda1eaf7a17
@@ -17,6 +16,7 @@ require (
 	github.com/google/uuid v1.1.2 // indirect
 	github.com/jchv/go-winloader v0.0.0-20210711035445-715c2860da7e // indirect
 	github.com/labstack/echo/v4 v4.9.0 // indirect
+	github.com/labstack/gommon v0.3.1 // indirect
 	github.com/leaanthony/go-ansi-parser v1.0.1 // indirect
 	github.com/leaanthony/gosod v1.0.3 // indirect
 	github.com/leaanthony/slicer v1.5.0 // indirect

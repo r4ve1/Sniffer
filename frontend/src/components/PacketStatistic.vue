@@ -1,18 +1,11 @@
 <template>
   <div class="bg-slate-300">
-    STATISTIC
+    STAT: {{ store.packets.length }}
   </div>
 </template>
 
 <script lang="ts" setup>
-import {defineProps, PropType} from "vue";
-
-defineProps({
-  packets: {
-    type: Array as PropType<Array<string>>,
-    required: true,
-  }
-})
+import {store} from "../store";
 
 </script>
 

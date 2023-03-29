@@ -2,82 +2,51 @@ package app
 
 import (
 	"fmt"
-
-	"github.com/google/gopacket/pcap"
+	"time"
 
 	"sniffer/internal/capture"
+	"sniffer/internal/capture/plugins/writer"
 )
+
+const captureNotInitialized = "capture not initialized"
 
 type DeviceInfo struct {
 	Description string
 	Addresses   []string
 }
 
-func (it *T) ListDevices() ([]DeviceInfo, error) {
-	devices, err := pcap.FindAllDevs()
-	if err != nil {
-		it.log.Error(fmt.Sprintf("Error listing devices: %s", err))
-		return nil, err
-	}
-	dis := make([]DeviceInfo, len(devices))
-	for i, dev := range devices {
-		addresses := make([]string, len(dev.Addresses))
-		for j, addr := range dev.Addresses {
-			addresses[j] = addr.IP.String()
-		}
-		dis[i] = DeviceInfo{
-			Description: dev.Description,
-			Addresses:   addresses,
-		}
-	}
-	return dis, nil
-}
-
-func (it *T) Start(device, filter string) error {
-	var err error
-	it.cp, err = capture.New(device, it.log)
+func (it *T) StartCapture(device string) error {
+	it.session.filename = fmt.Sprintf("%s.pcapng", time.Now().Format("2006-01-02_15-04-05"))
+	wp, err := writer.New(it.log, it.session.filename)
 	if err != nil {
 		return err
 	}
-	err = it.cp.StartCapture()
-	if err != nil {
-		return err
-	}
-	err = it.cp.StartReading(it.appCtx, filter)
-	if err != nil {
-		return err
-	}
-	return nil
-}
-
-func (it *T) Stop() error {
-	if it.cp == nil {
-		return nil
-	}
-	it.cp.StopReading()
-	err := it.cp.StopCapture()
-	if err != nil {
-		return err
-	}
-	it.cp = nil
-	return nil
+	it.session.capture = capture.New(it.log, wp)
+	return it.session.capture.Start(device)
 }
 
 func (it *T) PauseCapture() error {
-	it.cp.PauseCapture()
-	return nil
+	if it.session.capture == nil {
+		return fmt.Errorf(captureNotInitialized)
+	}
+	return it.session.capture.Pause()
 }
 
 func (it *T) ResumeCapture() error {
-	if err := it.cp.ResumeCapture(); err != nil {
-		return err
+	if it.session.capture == nil {
+		return fmt.Errorf(captureNotInitialized)
 	}
-	return nil
+	return it.session.capture.Resume()
 }
 
-func (it *T) RestartReading(filter string) error {
-	if err := it.cp.StartReading(it.appCtx, filter); err != nil {
+func (it *T) StopCapture() error {
+	if it.session.capture == nil {
+		return fmt.Errorf(captureNotInitialized)
+	}
+	err := it.session.capture.Stop()
+	if err != nil {
 		return err
 	}
+	it.log.Debug("Capture stopped")
 	return nil
 }
