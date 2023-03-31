@@ -1,6 +1,6 @@
 package app
 
-const samplePath = "D:/Desktop/sample.pcap"
+const samplePath = "D:/Desktop/http-chunked-gzip.pcap"
 
 func (it *T) SwitchToDev() error {
 	it.session.filename = samplePath

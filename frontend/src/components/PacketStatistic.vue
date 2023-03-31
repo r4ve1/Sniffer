@@ -1,6 +1,6 @@
 <template>
   <div class="bg-slate-300">
-    STAT: {{ store.packets.length }}
+    STAT: {{ store.briefs.length }}
   </div>
 </template>
 

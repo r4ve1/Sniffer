@@ -29,20 +29,13 @@
           </n-icon>
         </template>
       </n-button>
-      <n-button :disabled="!started || !paused" strong secondary circle type="info" @click="msg.info('Save')">
-        <template #icon>
-          <n-icon>
-            <save-icon/>
-          </n-icon>
-        </template>
-      </n-button>
     </div>
 
     <n-select class="w-2/5" :disabled="started" v-model:value="device" placeholder="Select" size="small"
               :options="deviceOptions"/>
     <div class="w-2/5">
       <n-input
-          :disabled="started" v-model:value="filter" type="text"
+          v-model:value="filter" type="text"
           :status="filterErrored ? 'error' :'success'"
           @keydown.enter="resetFilter"
           size="small" placeholder="BPF filter"/>
@@ -51,15 +44,15 @@
 </template>
 
 <script lang="ts" setup>
-import {Pause, Play, Save as SaveIcon, Stop as StopIcon} from "@vicons/ionicons5";
+import {Pause, Play, Stop as StopIcon} from "@vicons/ionicons5";
 import {onMounted, ref} from "vue";
 import * as app from "../../wailsjs/go/app/T";
 import {SelectOption, useMessage} from "naive-ui";
-import {Packet, store} from "../store";
+import {Brief, store} from "../store";
 import {EventsOn} from "../../wailsjs/runtime";
 
 const msg = useMessage();
-const EVENT = "packet";
+const EVENT = "packets";
 
 let started = ref(false);
 let paused = ref(false);
@@ -68,13 +61,17 @@ let filter = ref("");
 let filterErrored = ref(false);
 let deviceOptions = ref<Array<SelectOption>>([]);
 
+EventsOn(EVENT, (packets: Brief[]) => {
+  store.briefs.push(...packets);
+  document.getElementById("scroll-to-here")?.scrollIntoView();
+});
+
 onMounted(async () => {
-  EventsOn(EVENT, (packet: Packet) => {
-    store.packets.push(packet);
-    document.getElementById("scroll-to-here")?.scrollIntoView();
-  });
+
   try {
-    await app.SwitchToDev();
+    // await app.SwitchToDev();
+    // await app.SwitchToDev();
+
     let devices = await app.ListDevices();
     for (let i = 0; i < devices.length; i++) {
       deviceOptions.value.push({
@@ -90,7 +87,7 @@ onMounted(async () => {
 
 async function start() {
   try {
-    store.packets = [];
+    store.briefs = [];
 
     await app.StartCapture(device.value);
     await app.StartReader(filter.value);
@@ -133,7 +130,7 @@ async function stopCapture() {
 
 async function resetFilter() {
   try {
-    store.packets = [];
+    store.briefs = [];
     await app.StartReader(filter.value);
   } catch (err: any) {
     msg.error(err);

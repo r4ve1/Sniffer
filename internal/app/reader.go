@@ -3,15 +3,11 @@ package app
 import (
 	"fmt"
 
-	"github.com/google/gopacket"
-
-	"sniffer/internal/cache"
 	"sniffer/internal/reader"
 )
 
 const (
 	readerNotInitialized = "reader not initialized"
-	cacheNotInitialized  = "cache not initialized"
 )
 
 func (it *T) StartReader(filter string) error {
@@ -20,9 +16,9 @@ func (it *T) StartReader(filter string) error {
 	}
 	// reset view
 	it.v.Reset()
-	it.session.reader = reader.New(it.log, it.session.filename, it.v, cache.NewInMem)
+	it.session.reader = reader.New(it.log, it.session.filename, it.v)
 	var err error
-	it.session.cache, err = it.session.reader.Start(filter)
+	err = it.session.reader.Start(filter)
 	if err != nil {
 		return err
 	}
@@ -41,9 +37,7 @@ func (it *T) StopReader() error {
 	return nil
 }
 
-func (it *T) Get(i int) (gopacket.Packet, error) {
-	if it.session.cache == nil {
-		return nil, fmt.Errorf(cacheNotInitialized)
-	}
-	return it.session.cache.Get(i), nil
+func (it *T) GetDetail(i int) error {
+	it.v.RenderPacketDetail(i)
+	return nil
 }

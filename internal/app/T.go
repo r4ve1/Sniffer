@@ -5,16 +5,16 @@ import (
 
 	"github.com/wailsapp/wails/v2/pkg/logger"
 
-	"sniffer/internal/cache"
 	"sniffer/internal/capture"
 	"sniffer/internal/reader"
 	"sniffer/internal/view"
+	"sniffer/internal/view/renderer"
 )
 
 type T struct {
 	appCtx  context.Context
 	log     logger.Logger
-	v       view.I
+	v       *view.View
 	session session
 }
 
@@ -22,7 +22,6 @@ type session struct {
 	filename string
 	capture  capture.I
 	reader   reader.I
-	cache    cache.I
 }
 
 func New(log logger.Logger) *T {
@@ -35,5 +34,6 @@ func New(log logger.Logger) *T {
 // so we can call the runtime methods
 func (it *T) Startup(ctx context.Context) {
 	it.appCtx = ctx
-	it.v = view.New(ctx, it.log)
+	wailsRenderer := renderer.NewWails(ctx, it.log)
+	it.v = view.New(wailsRenderer, it.log)
 }
