@@ -11,12 +11,7 @@
   },
   "dependencies": {
     "@vueuse/core": "^9.13.0",
-    "floating-vue": "^2.0.0-beta.20",
-    "highlight.js": "^11.7.0",
-    "vue": "^3.2.37",
-    "vue-virtual-scroll-list": "^2.3.4",
-    "vue-virtual-scroller": "^2.0.0-beta.8",
-    "vue3-virtual-list": "^1.0.2"
+    "vue": "^3.2.37"
   },
   "devDependencies": {
     "@babel/types": "^7.18.10",

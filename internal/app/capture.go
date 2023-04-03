@@ -16,7 +16,7 @@ type DeviceInfo struct {
 }
 
 func (it *T) StartCapture(device string) error {
-	it.session.filename = fmt.Sprintf("%s.pcapng", time.Now().Format("2006-01-02_15-04-05"))
+	it.session.filename = fmt.Sprintf("%s.pcap", time.Now().Format("2006-01-02_15-04-05"))
 	wp, err := writer.New(it.log, it.session.filename)
 	if err != nil {
 		return err

@@ -5,23 +5,24 @@
       <n-button @click="store.showDetail = false" secondary type="error" circle>
         <template #icon>
           <n-icon>
-            <close/>
+            <close-icon />
           </n-icon>
         </template>
       </n-button>
     </div>
 
-    <n-tree :data="data"/>
+    <n-scrollbar>
+      <n-tree :data="data" />
+    </n-scrollbar>
   </div>
-
 </template>
 
 <script lang="ts" setup>
-import {Detail, store} from "../store";
-import {Close} from "@vicons/ionicons5";
-import {ref} from "vue";
-import {TreeOption} from "naive-ui";
-import {EventsOn} from "../../wailsjs/runtime";
+import { Detail, store } from "../store";
+import { Close as CloseIcon } from "@vicons/ionicons5";
+import { ref } from "vue";
+import { TreeOption } from "naive-ui";
+import { EventsOn } from "../../wailsjs/runtime";
 
 let data = ref<Array<TreeOption>>([]);
 
@@ -51,6 +52,4 @@ function toData(detail: object): Array<TreeOption> {
 
 </script>
 
-<style scoped>
-
-</style>
+<style scoped></style>

@@ -69,9 +69,6 @@ EventsOn(EVENT, (packets: Brief[]) => {
 onMounted(async () => {
 
   try {
-    // await app.SwitchToDev();
-    // await app.SwitchToDev();
-
     let devices = await app.ListDevices();
     for (let i = 0; i < devices.length; i++) {
       deviceOptions.value.push({
@@ -118,7 +115,6 @@ async function resumeCapture() {
 
 async function stopCapture() {
   try {
-    // EventsOff(EVENT);
     await app.StopCapture();
     await app.StopReader();
     started.value = false;
