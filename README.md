@@ -25,9 +25,9 @@
     ```
 4. Build
     ```bash
-    # production
-    wails build
     # develop
+    wails dev
+    # production
     wails build -ldflags="-s -w" -upx
     ```
 ## Known Issues
